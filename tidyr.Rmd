@@ -1,0 +1,35 @@
+---
+title: "R Notebook"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+
+```{r}
+library(tidyverse)
+```
+
+```{r}
+table1 #built-in dataset of tidyr
+```
+
+```{r}
+table1 %>% mutate(rate = (cases/population) * 10000)
+table1 %>% count(year, wt = cases)
+ggplot(data = table1 %>% mutate(rate = (cases/population)*10000), aes(x = year, y = rate)) +
+  geom_line(aes(group = country), color = 'black') +
+  geom_point(aes(color = country))
+```
+```{r}
+table1 %>% select(c(year,country,population)) %>% spread(key = country, value = population)
+```
+```{r}
+table.wide = table1 %>% filter(!is.na(cases)) %>% mutate(rate = (cases/population) * 10000) %>% select(year, country, rate) %>% spread(key = country, value = rate)
+```
+```{r}
+table.wide %>% gather(key = 'country', value = 'rate', -year)
+```
+```{r}
+write.csv(table1.wide, file = 'R export.csv')
+```
+

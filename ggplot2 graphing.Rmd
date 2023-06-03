@@ -1,0 +1,190 @@
+---
+title: "ggplot2 graphing"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+```{r}
+#library() loads the package
+library(ggplot2)
+```
+```{r}
+data('mpg')
+mpgData = mpg
+```
+```{r}
+head(mpgData,5)
+```
+```{r}
+#Initiate ggplot and bind the mpgData datframe.
+ggplot(data = mpgData)
+```
+```{r}
+#create a plot object - step 1
+p1 = ggplot(data = mpgData)
+```
+```{r}
+#add aesthetic mapping to plot object - step 2
+p1 = ggplot(data = mpgData, aes(x = disp, y = hwy))
+```
+```{r}
+#Use geom_ type function to add geometric points - step 3
+p1 = ggplot(data = mpgData, aes(x = displ, y = hwy)) + geom_point()
+```
+```{r}
+#Adding lables of X and Y and titles
+p1 = p1 + labs( x = 'Displacement(in litres)' , y = 'mileage (in mpg)', title = 'Mileage vs Displacement') 
+p1
+```
+```{r}
+
+```
+
+```{r}
+p2 = ggplot(data = mpgData) +
+  geom_point(mapping = aes(x = displ, y = hwy, color = class))
+p2
+```
+
+```{r}
+#aesthetic alpha is used for transparency and for color variable is not used.
+p3 = ggplot(data = mpgData) +
+  geom_point(mapping = aes(x = displ, y = hwy, size = class))
+p3 = ggplot(data = mpgData) +
+  geom_point(mapping = aes(x = displ, y = hwy, alpha = class), color = 'orange',size = 2)
+p3
+```
+
+```{r}
+#facets are sub plots
+ggplot(data = mpgData) +
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  facet_wrap(~class,nrow = 2)
+```
+```{r}
+ggplot(data = mpgData) +
+  geom_point(mapping = aes(x = displ, y = hwy)) +
+  facet_grid(drv ~ cyl)  # ~ is formula symbol
+```
+
+```{r}
+ggplot(data = mpgData) +
+  geom_point(mapping = aes(x = displ, y = hwy))
+```
+
+```{r}
+factor(mpgData$cyl)
+```
+```{r}
+mpgData %>% count(cyl)
+```
+```{r}
+#exclude cylinder 5 value and overwrite mpgData dataframe.
+mpgData = mpgData %>% filter(!(cyl %in% c(5)))
+head(mpgData,5)
+```
+```{r}
+ggplot(data = mpgData) +
+```
+
+
+```{r}
+geom_point(mapping = aes(x = displ, y = hwy, color = factor(cyl)))
+```
+
+```{r}
+p4 = ggplot(data = mpgData) +
+  geom_smooth(mapping = aes(x = displ, y = hwy), se = FALSE)
+p4
+```
+
+```{r}
+p5 = ggplot(data = mpgData) +
+  geom_smooth(mapping = aes(x = displ, y = hwy, linetype = factor(cyl)), se = FALSE)
+p5
+```
+```{r}
+p6 = ggplot(data = mpgData, mapping = aes(x = displ, y = hwy)) +
+  geom_point(mapping = aes(color = factor(cyl))) +
+  geom_smooth(data = filter(mpgData, class == 'subcompact'), se = FALSE)
+p6
+```
+```{r}
+p7 = ggplot(data = mpgData) +
+     geom_bar(mapping = aes(x = cyl))
+p7
+```
+```{r}
+p8 = ggplot(data = mpgData) +
+     geom_boxplot(mapping = aes(x = factor(cyl),y = hwy)) 
+#factor is being used to treat a s discrete variable
+p8
+```
+```{r}
+p9 = ggplot(data = mpgData) +
+     geom_boxplot(mapping = aes(x = factor(cyl),y = hwy),
+     outlier.color = "red", outlier.shape = 8, outlier.size = 4) 
+p9
+```
+```{r}
+df = data.frame(
+     gender = factor(rep(c("F","M"),each = 200)),
+     height = round(c(rnorm(200, mean = 60, sd = 10),rnorm(200, mean = 70, sd = 6)))
+)
+```
+
+```{r}
+ggplot(data = df)+
+  geom_histogram(mapping = aes(x = height))
+```
+```{r}
+ggplot(df, aes(x = height)) +
+  geom_histogram(binwidth =2)
+```
+```{r}
+ggplot(df, aes(x = height)) +
+  geom_histogram(color = 'black', fill = 'magenta')
+```
+```{r}
+ggplot(df, aes(x = height, color = gender)) +
+  geom_histogram(fill = 'white')
+```
+
+```{r}
+ggplot(df, aes(x = height, color = gender)) +
+  geom_histogram(fill = 'white', alpha = 0.2, position = 'identity')
+```
+```{r}
+?geom_bar  #help
+ggplot(data = mpgData) +
+  stat_count(mapping = aes(x = cyl))
+```
+
+```{r}
+table(mpgData$cyl) #displays count of 4,6 and 8 cylinders
+```
+
+```{r}
+temptable = data.frame(table(mpgData$cyl))
+colnames(temptable) = c('cyl', 'frequency')
+temptable
+```
+```{r}
+ggplot(data = temptable) +
+  geom_bar(mapping = aes(x = cyl, y = frequency),stat = 'identity')
+```
+```{r}
+ggplot(data = mpgData) +
+  geom_bar(mapping = aes(x = cyl, y = after_stat(prop)))
+#prop(also stat) is an intermediate variable and can be accessed directly by calling with after_stat() or ..prop.. in old version of ggplot2.
+```
+```{r}
+ggplot(data = mpgData) +
+  geom_histogram(mapping = aes(x = displ, y = after_stat(density)), binwidth = 0.5, color = 'black', fill = 'maroon', alpha = 0.4) 
+```
+
+```{r}
+ggplot(data = mpgData) +
+  geom_bar(mapping = aes(x = cyl, fill = class), position = 'fill')
+```
+

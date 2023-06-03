@@ -1,0 +1,123 @@
+---
+title: "Webinar-3"
+output:
+  html_document:
+    df_print: paged
+editor_options:
+  chunk_output_type: console
+---
+
+#### Execute the following cell to load the tidyverse library:
+```{r}
+library(tidyverse)
+```
+
+#### Execute the following cell to load the data. Refer to this website http://openmv.net/info/food-texture for data description:
+```{r}
+file = 'http://openmv.net/file/food-texture.csv'
+#file = 'Data/food-texture.csv'
+foodData = read.csv(file, header = TRUE, row.names = 1)
+```
+
+#### Print structure of dataframe
+```{r}
+str(foodData)
+```
+
+#### Print first 5 samples of data frame
+```{r}
+head(foodData, n = 5)
+```
+
+#### Get the number of samples and features
+```{r}
+nrow(foodData)
+ncol(foodData)
+```
+
+#### Rename Oil column to OilPercentage
+```{r}
+foodData = foodData %>% rename(OilPercentage = Oil)
+str(foodData)
+```
+
+#### In-built functions for dataframes
+```{r}
+# Mean oil percentage across all samples
+mean(foodData$OilPercentage)
+
+# Mean-centering of OilPercentage
+foodData$OilPercentageMC = foodData$OilPercentage - mean(foodData$OilPercentage)
+head(foodData)
+
+# Sum of the squared deviation from the mean
+sum((foodData$OilPercentageMC)^2)
+
+# Average of the squared deviation from the mean
+(1/(nrow(foodData)-1))*sum((foodData$OilPercentageMC)^2) # also called the variance
+
+# Variance of OilPercentage
+var(foodData$OilPercentage)
+
+# Standard deviation of OilPercentage
+sd(foodData$OilPercentage)
+```
+
+#### Visualize the OilPercentage features
+```{r}
+bins = seq(mean(foodData$OilPercentage)-3*sd(foodData$OilPercentage), mean(foodData$OilPercentage)+3*sd(foodData$OilPercentage), by = 1.0)
+p1 = ggplot(data = foodData) + 
+  geom_histogram(aes(x = OilPercentage, y = ..count..),
+                 breaks = bins, colour = 'black',
+                 fill = 'steelblue') +
+  labs(x = 'Oil Percentage', y = 'Frequency') +
+  ggtitle('Histogram of Oil Percentage Values')
+p1
+```
+
+#### Modify crispy column to reflect high (0) or low (1) crispiness
+```{r}
+foodData = foodData %>% mutate(Crispy = ifelse(Crispy > 11, 'high', 'low'))
+head(foodData)
+str(foodData)
+```
+
+##### Change Crispy column to factor (categorical) type
+```{r}
+#factor(foodData$Crispy)
+foodData['Crispy'] = lapply(foodData['Crispy'], factor)
+str(foodData)
+```
+
+#### Scatter plot between OilPercentage and Density
+```{r}
+p2 = ggplot(data = foodData) +
+  geom_point(aes(x = Density, y = OilPercentage, color = Crispy), size = 1)
+p2
+```
+
+#### Scale continuous columns of the dataframe
+```{r}
+ind_continuous = sapply(foodData, is.numeric)
+foodData[ind_continuous] = lapply(foodData[ind_continuous], scale)
+head(foodData)
+```
+
+#### Calculate the correlation matrix for the continuous features
+```{r}
+cor(foodData[ind_continuous])
+```
+
+#### Scatter plot between Density and Hardness
+```{r}
+p3 = ggplot(data = foodData) +
+  geom_point(aes(x = Density, y = Hardness), size = 1)
+p3
+```
+
+#### Scatter plot between Density and Fracture
+```{r}
+p2 = ggplot(data = foodData) +
+  geom_point(aes(x = Density, y = Fracture), size = 1)
+p2
+```

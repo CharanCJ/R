@@ -1,0 +1,105 @@
+---
+title: "Simulation Using in-built R functions"
+output: html_notebook
+---
+
+```{r}
+library("ggplot2")
+library("dplyr")
+```
+
+```{r}
+#Simulation of rolling a fair dice
+#Sample Space for rolling a pair of dice
+s = c(1:6)
+```
+
+```{r}
+#Corresponding Probabilities
+P = (1/6) * replicate(6,1)
+print(P)
+#Sampling Process
+nsimulations = 10 #no of times dice are rolled.
+simulateddata = replicate(nsimulations,sample(s,2,replace = TRUE, prob = P))
+#size 2 in sample() refers to 2 dice that are rolled and replicate() performs sampling
+#based on argument
+str(simulateddata[, 1])
+print(simulateddata)
+```
+```{r}
+nsimulations = 1e5  #1 followed by 5 zero's
+simulateddata = replicate(nsimulations,sample(s,2,replace = TRUE, prob = P))
+#Function to check sum of pair of dice rolls is at least 7
+checkEvent = function(data){
+  if(sum(data) > 7){
+    return(1)
+  } else {
+    return(0)
+  }
+}
+```
+```{r}
+print(simulateddata)
+apply(simulateddata,2,checkEvent)
+```
+```{r}
+mean(apply(simulateddata,2,checkEvent))
+```
+```{r}
+#Probability that first roll is even
+checkEvent1 = function(data){
+  if(data[1]%%2 == 0){
+    return(1)
+  } else {
+    return(0)
+  }
+}
+
+mean(apply(simulateddata,2,checkEvent1))
+```
+```{r}
+#Simulating a discrete random variable (n=10 objects, p =0.6)
+n = 10
+p = 0.6
+nsimulations = 200
+rbinom(nsimulations,n,p)  #binomial random variable.
+df = as.data.frame(table(simulateddata))
+colnames(df) = c('value','frequency')
+head(df,5)
+p = ggplot(data = df) +
+    geom_col(mapping = aes(x = value, y = frequency), width = 0.7, fill = 'steelblue') +
+    ggtitle('Simulating a Binomial Random Variable') +
+    labs(x = 'Values', y = 'Frequency') +
+    theme_minimal()
+p
+```
+```{r}
+rpois(100, lambda = 10)  #Poisson random variable - event happening certain no of times with given interval of time.
+```
+```{r}
+#Simulating a continuous random variable
+mu = 170
+sigma = 8
+nsimulations = 1e1
+rnorm(nsimulations,mean = mu, sd = sigma)
+df1 = as.data.frame(simulateddata)
+colnames(df1) = 'Height'
+#head(df1)
+#mean((df1['Height'] >= 170) & (df1['Height'] <= 171))
+delta = 2
+p2 = ggplot(data = df1) +
+     geom_histogram(aes(x = Height, y = after_stat(count)),breaks = seq(mu-4*sigma, mu+4*sigma, by = delta), color = 'black', 
+                    fill = 'steelblue', alpha = 0.4) +
+    labs( x= 'Height', y = 'frequency')
+p2
+```
+```{r}
+checkEvent = function(data){
+    if (length(unique(data)) == 40){
+        return(1)
+      }
+    }    
+    return (1)
+}
+```
+
