@@ -1,0 +1,86 @@
+---
+title: "EDA - R"
+output: html_notebook
+---
+```{r}
+library(tidyverse)
+```
+```{r}
+ds = read.csv("E:/Data/R/mtcars2.csv")
+tail(ds,5)
+```
+```{r}
+ds = ds %>% mutate(cyltype = ifelse(cyl > 4, 'High','Low'))
+colnames(ds)
+```
+```{r}
+categorical_cols1 = c('vs', 'am', 'cyltype')
+ds[categorical_cols1] = lapply(ds[categorical_cols1],as.factor)
+str(ds)
+```
+```{r}
+summary(ds)
+```
+
+```{r}
+ggplot(data = ds) +
+  geom_bar(mapping = aes(x = cyltype))
+```
+```{r}
+ds %>% count(cyltype)
+```
+```{r}
+ggplot(data = ds) +
+  geom_histogram(mapping = aes(x = mpg), binwidth = 0.7)
+```
+
+```{r}
+ds %>% count(cut_width(mpg,2.5))
+```
+```{r}
+ggplot(data = ds, aes(x = mpg)) +
+  geom_freqpoly(binwidth = 2.5, mapping = aes(color = cyltype))
+```
+```{r}
+ggplot(data = ds, mapping = aes(x = cyltype, y = mpg)) +
+  geom_boxplot()
+```
+```{r}
+data('mpg')
+mpgds = mpg
+colnames(mpg)
+```
+```{r}
+ggplot(data = mpgds, aes(x = class, y = hwy)) +
+  geom_boxplot()
+```
+```{r}
+ggplot(data = mpgds) +
+  geom_boxplot(aes(x = reorder(class, hwy, fun = median), y = hwy))
+```
+```{r}
+ggplot(data = mpgds) +
+  geom_boxplot(aes(x = reorder(class, hwy, fun = median), y = hwy)) +
+  coord_flip()
+```
+```{r}
+ggplot(data = ds, aes(x = hp, y = mpg, color = factor(cyltype))) +
+  geom_point(size = 1)
+```
+```{r}
+data("diamonds")
+tail(diamonds,5)
+```
+```{r}
+library("hexbin")
+```
+```{r}
+ggplot(data = diamonds) +
+ # geom_point(mapping = aes(x = carat, y = price))
+geom_hex(mapping = aes(x = carat, y = price))
+```
+
+
+```{r}
+```
+

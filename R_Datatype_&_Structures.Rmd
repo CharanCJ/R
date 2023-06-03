@@ -1,0 +1,177 @@
+---
+title: An R Markdown document converted from "R_Datatype_&_Structures.ipynb"
+output: html_document
+---
+
+```{r}
+my_obj = 45
+```
+
+```{r}
+my_int = 10L  #L represents integer
+print(my_int)
+```
+
+```{r}
+# 1 Create a Vector data structure - should be of same data type
+my_vec1 = c(1L,2L,3L)
+print(my_vec1)
+my_vec2 = 1:3
+print(my_vec2)
+my_vec3 = seq(from = 1, to = 10, by = 2)
+print(my_vec3)
+```
+
+```{r}
+#Functions
+length(my_vec3)
+class(my_vec3)  #to know fundamental(generic) data type
+class(my_vec1)
+typeof(my_vec3)
+typeof(my_vec1)
+str(my_vec3) #str define structure of the object.
+```
+
+```{r}
+#Access elements of vector
+my_vec3[4]
+#Modify vector element
+my_vec3[4] = 3
+print(my_vec3)
+```
+
+```{r}
+#Missing Data
+my_vec4 = c(1,2,NA,4)
+print(my_vec4)
+is.na(my_vec4)
+anyNA(my_vec4)
+```
+
+```{r}
+# 2 List Data Structure - can contain different data type.
+my_list1 = list(5,'name',c(1,3,5,7))
+print(my_list1)
+```
+
+```{r}
+# Assign names to slots of List
+names(my_list1) = c('one','two','three')
+str(my_list1)
+#Accessing list elements
+my_list1[3] #gives slot name and elements
+my_list1$three #gives list elements as slot name is already defined.
+```
+
+```{r}
+# 3 Matrix Data Structure is an atomic vector with one or more dimensions.
+my_matrix1 = matrix(c(1,2,3,4), nrow = 2, ncol = 2)
+print(my_matrix1)
+
+my_matrix2 = matrix(c(1,2,3,4,5,6), nrow = 2, ncol = 3, byrow = TRUE)
+print(my_matrix2)
+
+# Matrix - Judges Probability Problem
+judge_prob = c(0.95,0.95,0.90, 0.90,0.80)
+j_in_prob = 1 - judge_prob #broadcasting of R
+print(j_in_prob)
+p = matrix(c(judge_prob[1], j_in_prob[1],
+             judge_prob[2], j_in_prob[2],
+             judge_prob[3], j_in_prob[3],
+             judge_prob[4], j_in_prob[4],
+             judge_prob[5], j_in_prob[5]
+            ),
+           nrow = 2,
+           ncol = 5,
+          )
+print(p)
+decision = c(1,0)
+cdecision = vector('integer', ncol(p))
+for (j in 1:ncol(p)) {
+  cdecision[j] = sample(decision, 1, replace = TRUE, prob = p[, j])
+}
+print(cdecision)
+if (sum(cdecision) >= 3){
+ print('Release prisoner')
+} else{
+print('Prisoner not released')
+}
+```
+
+```{r}
+# Assign row names and column names
+rownames(my_matrix2) = c('one','two')
+colnames(my_matrix2) = c('col1','col2','col3')
+str(my_matrix2)
+#Access elements of matrix
+my_matrix2[1,2]
+```
+
+```{r}
+# 4 Dataframe data structure is list of lists with each sublist of same length.It is like a rectangular list.
+#create a dataframe manually
+ID = c('A','B','C')
+Age = c(24,26,29)
+Height = c(167,180,177)
+df1 = data.frame(ID,Age,Height)
+df1
+```
+
+```{r}
+# first n rows
+head(df1,1)
+# last n rows
+tail(df1,2)
+# Dimensions od df rows and columns
+dim(df1)
+# rows in df
+nrow(df1)
+# cols in df
+ncol(df1)
+```
+
+```{r}
+# Access df elements of a column
+df1[['ID']]
+# Access df elements of a row
+df1[2,] #giving row name and comma will give entire row info
+# Access multiple columns
+df1[c('ID','Age')]
+```
+
+```{r}
+# 5 Factor data structure is a vector that can contain only predefined values, and is used to store categorical data
+# Create a factor for storing list of genders
+gender = factor(c('male','female','male','female'))
+print(gender) #Levels will give distinct values
+# Functions of Gender
+levels(gender)
+# Modifying gender
+gender[1] = 'Female'
+print(gender)
+```
+
+```{r}
+# Importing Data in R
+#file = 'http:/openmv.net/file/food-texture.csv'
+file = 'food-texture.csv' #file under content folder will be removed after session ends which is drawback in colab
+foodData = read.csv(file, header = TRUE, row.names = 1, stringsAsFactors = FALSE)
+#foodData
+dim(foodData)
+#Get rows and columns
+nrow(foodData)
+ncol(foodData)
+#structure of dataframe
+str(foodData)
+#Functions
+mean(foodData$Density)
+apply(foodData, 2, mean) #2 refers column wise direction applying mean to all columns and 1 referes to row wise direction
+apply(foodData[c('Oil','Density')], 2 , mean) 
+```
+
+```{r}
+file = 'https://openmv.net/file/food-texture.csv'
+fdata = read.csv(file, header = TRUE, row.names = 1)
+head(fdata,9)
+```
+

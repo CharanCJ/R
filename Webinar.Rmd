@@ -1,0 +1,54 @@
+---
+title: "R Notebook"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+```{r}
+library(dplyr)
+```
+
+```{r}
+file = 'https://openmv.net/file/food-texture.csv'
+fdata = read.csv(file, header = TRUE, row.names = 1)
+head(fdata,9)
+```
+```{r}
+fadata = fdata %>% rename(OilPercentage = Oil)
+
+```
+
+```{r}
+head(fdata,9)
+```
+
+```{r}
+mean(fdata$Oil)
+```
+```{r}
+fdata$Oilmc =  fdata$Oil - mean(fdata$Oil)
+head(fdata,6)
+```
+```{r}
+#Sum of Squared deviation Mean
+sum((fdata$Oilmc)^2)
+```
+```{r}
+#variance 
+var(fdata$Oil)
+```
+```{r}
+#Standard Deviation
+sd(fdata$Oil)
+```
+```{r}
+bins = seq(mean(fdata$Oil)-3 * sd(fdata$Oil), mean(fdata$Oil) + 3 * sd(fdata$Oil), by = 1.0)
+p1 = ggplot(data = fdata) +
+     geom_histogram(mapping = aes(x =Oil, y = ..count..), breaks = bins, color = 'black', fill = 'steelblue') +
+     labs(x = 'Oil Percentage', y = 'Frequency') +
+     ggtitle('Histogram of Oil Percentage Values')
+p1
+```
+
+
+

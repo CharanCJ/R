@@ -1,0 +1,84 @@
+---
+title: "Tidyverse & ggplot2"
+output: html_notebook
+editor_options: 
+  chunk_output_type: inline
+---
+chunk_output_type: console
+```{r}
+library('tidyverse')
+```
+```{r}
+carData = read.csv('E:/Data/R/mtcars2.csv')
+#carData = data('mtcars')
+```
+```{r}
+head(carData,15)
+```
+```{r}
+str(carData)
+```
+```{r}
+colnames(carData)
+```
+```{r}
+nrow(carData)
+```
+```{r}
+ncol(carData)
+```
+```{r}
+carData %>% mutate(coltype = 'High')
+carData %>% mutate(coltype = ifelse(cyl >4, 'High','Low'))
+```
+
+
+```{r}
+carData %>% mutate(wtton = 0.45*wt)
+```
+```{r}
+#Creating new dataframe with new columns
+carData.new = carData %>% mutate(coltype = ifelse(cyl >4, 'High','Low'),wtton = 0.45*wt)
+str(carData.new)
+```
+```{r}
+carData.new %>% summarise(mean(wtton),mean(disp))
+```
+```{r}
+carData.new %>% group_by(coltype) %>% summarise(mean(wtton),mean(disp))
+```
+
+```{r}
+carData.new %>% filter(wtton > 2)
+```
+```{r}
+carData.new %>% filter(wtton > 2 & cyl >4)
+```
+
+```{r}
+carData.new %>% select(hp,-gear)
+```
+```{r}
+#Initiate ggplot
+ggplot(data = carData)
+```
+```{r}
+#Creating plot object
+carPlot = ggplot(data = carData)
+```
+
+```{r}
+#aes() aesthitic mapping is used for how variables sgould be plotted.
+carPlot = ggplot(data = carData, aes(x = wt, y = disp))
+```
+```{r}
+#use the geom_ type functions to add geometric elements
+carPlot = carPlot + geom_point() 
+#geom_point will take points from aes and adding to carPlot object.
+carPlot #calling the object to diplay chart
+```
+```{r}
+carPlot = carPlot + labs(x = 'weight (1000 lbs)',y = 'displacement (cu. in)', title = 'Weight vs displacement')
+carPlot
+```
+

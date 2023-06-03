@@ -1,0 +1,74 @@
+---
+title: "Control Flow in R"
+output: html_notebook
+---
+```{r}
+x = 8
+x == 8
+x == 4
+x == 4 *2
+x > 6
+```
+```{r}
+l1 = c(TRUE,FALSE,TRUE,FALSE)
+l2 = c(TRUE,TRUE,FALSE,FALSE)
+l1 & l2
+l1 | l2
+!(l1)
+l1 && l2 #long from and(performs operation only on first elements)
+```
+```{r}
+names = c('Vijay','Yash','Charan','Pavan')
+!('Yas' %in% names) #Returns boolean value
+```
+```{r}
+x = c(1,2, NA)  #NA is missing value
+x > 0
+all(x > 0)
+any( x > 0)
+isTRUE(all(x > 0))
+y = c(1:4)
+z = (x^(1/2))^2
+all.equal(y,z)
+```
+```{r}
+a = -9
+
+
+if(a > 0) {
+  print('Positive')
+} else if (a < 0) {
+  print('Negative')
+} else {
+  print('Zero')
+}
+``` 
+```{r}
+#Vectorized ifelse
+b = c(1:10)
+print(b)
+ifelse(b %% 2 == 0,'even','odd')
+```
+```{r}
+for(i in 1:length(b)) {
+  y[i] = b[i]^2
+  print(y[i])
+}
+```
+```{r}
+partcipants = c('Ram','Charan','Tej')
+for (names in partcipants) {
+  print(names)
+  }
+```
+```{r}
+d = 1
+while(d > 0.3){
+  d = runif(1) #runif generates random number
+  print(d)
+}
+
+```
+
+
+
