@@ -25,7 +25,8 @@ head(autompg,20)
 **Question 1.1**: print the structure of the unedited data set. How many samples and features are there?
 
 ```{r}
-str()
+str(autompg)
+#398 samples and 9 features
 ```
 
 **Execute the following cell to assign names to the columns of the dataframe:**
@@ -37,19 +38,24 @@ colnames(autompg) = c("mpg", "cyl", "disp", "hp", "wt", "acc", "year", "origin",
 **Question 1.2**: complete the code segment below to remove samples with missing horsepower (hp) values represented as a "?" in the dataset.
 
 ```{r}
-autompg = autompg %>% filter()
+autompg = autompg %>% filter(!hp %in% '?')
 ```
 
 **Question 1.3**: complete the code segment below to remove samples with the name "plymouth reliant"
 
 ```{r}
-autompg = autompg %>% 
+autompg = autompg %>% filter(!name %in% "plymouth reliant")
+autompg
 ```
 
 **Question 2.1**: complete the code segment below to select all features except 'name'
+```{r}
+select = select(autompg,-name)
+```
 
 ```{r}
-autompg = autompg %>% select()
+autompg.new = autompg %>% select(autompg,-name)
+autompg.new
 ```
 
 **Execute the following cell to change the type of hp values from character to numeric:**
@@ -59,29 +65,35 @@ autompg$hp = as.numeric(autompg$hp)
 ```
 
 **Question 2.2**: complete the code cell to modify 'origin' column to reflect local (1) and international models (0)
+```{r}
+distinct(autompg,origin)
+```
 
 ```{r}
-autompg = autompg %>% mutate(origin = ifelse())
+autompg = autompg %>% mutate(origin = ifelse(origin == 1,'local','international models'))
 head(autompg, 20)
 ```
 
 **Question 2.3**: print the structure of the dataframe. What types are the columns 'cyl' and 'origin'?
 
 ```{r}
-str()
+str(autompg)
+#cyl - integer, origin - chr
 ```
 
 **Question 3.1**: complete the code segment below to change the types of 'cyl' and 'origin' columns to factor
 
 ```{r}
-catcols = c()
-autompg[catcols] = 
+catcols = c('cyl','origin')
+autompg[catcols] = lapply(autompg[catcols],as.factor)
+str(autompg)
 ```
 
 **Question 3.2**: complete the code segment below to create a scatter plot of mpg vs. displacement by color coding the points according to the origin (local or international). Add axes labels and title for the plot. Comment on what you observe:
 
 ```{r}
-p = ggplot(data = , aes(x = , y = , color = )) + 
-  
+p = ggplot(data = autompg , aes(x = mpg, y = disp, color = origin)) + 
+    geom_point() +
+           labs(x = 'mpg', y = 'displacement',  title = 'mpg vs displacement')
 p
 ```
